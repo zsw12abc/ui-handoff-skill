@@ -46,8 +46,11 @@ Do not jump from screenshot to code. First produce a handoff package:
 5. Responsive behavior
 6. AI freedom rules
 7. Acceptance criteria
+8. Asset decomposition when visual assets need extraction
 
 Use the schema in [references/schema.md](references/schema.md). For a complete example, load [references/example-handoff.md](references/example-handoff.md).
+
+For game UI, sprite sheets, icon packs, prop packs, maps, or other raster asset decomposition, also read [references/asset-tools.md](references/asset-tools.md). Use Agent Sprite Forge as an optional downstream asset pipeline, not as a required dependency for ordinary product UI handoff.
 
 ## Workflow
 
@@ -108,6 +111,25 @@ Capture tokens in semantic roles:
 - motion: durations, easing, hover/selection feedback
 
 If exact values are unavailable, estimate conservatively and mark confidence as estimated.
+
+### 4.5. Decompose Visual Assets When Needed
+
+Use this only when the design reference contains game-ready assets, sprite sheets, maps, icon packs, prop packs, HUD art, or reusable raster elements.
+
+Record:
+
+- source asset regions
+- asset type: icon, sprite, prop, map, HUD element, FX, texture
+- extraction strategy: manual crop, sprite-sheet split, prop-pack slicing, regenerate, or leave embedded
+- recommended downstream tool
+- output expectations: transparent PNG, frame sequence, GIF preview, metadata, collision/zones, engine handoff
+
+If Agent Sprite Forge is available, use:
+
+- generate2dsprite for sprites, animation sheets, props, spell bundles, FX, and frame extraction
+- generate2dmap for layered raster maps, prop packs, collision/zones, and Godot-style map handoff
+
+Do not force this pipeline for normal SaaS/dashboard/mobile UI screenshots.
 
 ### 5. Define Interaction States
 
