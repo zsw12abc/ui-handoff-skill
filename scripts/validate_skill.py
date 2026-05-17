@@ -44,10 +44,11 @@ def main() -> int:
         return fail("README.md not found (install/update docs live here)")
 
     readme = readme_path.read_text(encoding="utf-8")
+    version = fields["version"]
     required_phrases = [
         "npx skills add zsw12abc/ui-handoff-skill -y",
         "npx skills update ui-handoff",
-        "npx skills add zsw12abc/ui-handoff-skill@v0.1.0 -y",
+        f"npx skills add zsw12abc/ui-handoff-skill@v{version} -y",
     ]
     for phrase in required_phrases:
         if phrase not in readme:

@@ -1,7 +1,7 @@
 ---
 name: ui-handoff
 description: Turn UI screenshots, static mockups, Figma exports, or design references into implementation-ready UI handoff specs for AI coding agents. Use when the user provides a design image and needs components, layout regions, design tokens, interaction states, responsive rules, AI freedom constraints, and acceptance criteria before building frontend code.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # UI Handoff
@@ -64,7 +64,7 @@ Full mode generates:
 3. `implementation-prompt.md` — prompt for the coding agent
 4. `acceptance-checklist.md` — verification gate
 
-Minimum JSON shape:
+Required JSON fields (enforced by the validator):
 
     {
       "page_intent": {},
@@ -73,10 +73,11 @@ Minimum JSON shape:
       "design_tokens": {},
       "interaction_states": [],
       "responsive_rules": [],
-      "accessibility": {},
       "ai_freedom_rules": [],
       "acceptance_criteria": []
     }
+
+Recommended additional fields: `analysis`, `accessibility`, `asset_decomposition` — see [references/schema.md](references/schema.md).
 
 Validate:
 

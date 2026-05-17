@@ -21,7 +21,7 @@ Latest stable:
 
 Pin a specific release:
 
-    npx skills add zsw12abc/ui-handoff-skill@v0.1.0 -y
+    npx skills add zsw12abc/ui-handoff-skill@v0.1.1 -y
 
 Update one skill:
 
@@ -64,10 +64,10 @@ Run the validator on a generated spec:
 
 Cut a release by tagging the matching `version:` in [SKILL.md](SKILL.md):
 
-    git tag v0.1.0
-    git push origin v0.1.0
+    git tag v0.1.1
+    git push origin v0.1.1
 
-The release workflow validates the skill, checks tag/version parity, and publishes zip + tar.gz artifacts.
+Or merge a commit with `[release]` in its message to `main` — the workflow reads the version from `SKILL.md` frontmatter, validates, and publishes zip + tar.gz artifacts.
 
 ## License
 
