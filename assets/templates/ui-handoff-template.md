@@ -93,7 +93,14 @@ Build this UI as a real product surface, not a static screenshot recreation. Cre
 - [ ] Adaptive areas preserve design language while responding to content and viewport.
 - [ ] No unapproved decorative gradients, card nesting, oversized hero sections, or marketing-style additions.
 
-## 10. Assumptions
+## 10. Asset Decomposition
+
+Use only when the design contains reusable raster assets, sprites, maps, prop packs, HUD art, FX, or icon sheets.
+
+| Asset ID | Source Region | Asset Type | Strategy | Recommended Tool | Outputs | Notes |
+|---|---|---|---|---|---|---|
+|  |  |  |  |  |  |  |
+
+## 11. Assumptions
 
 -
-
