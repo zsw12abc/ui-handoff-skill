@@ -1,11 +1,32 @@
 ---
 name: ui-handoff
 description: Turn UI screenshots, static mockups, Figma exports, or design references into implementation-ready UI handoff specs for AI coding agents. Use when the user provides a design image and needs components, layout regions, design tokens, interaction states, responsive rules, AI freedom constraints, and acceptance criteria before building frontend code.
+version: 0.1.0
 ---
 
 # UI Handoff
 
 Convert static UI references into a structured spec that another AI agent can implement without guessing.
+
+## Install and Update
+
+Install the latest stable version:
+
+    npx skills add zsw12abc/ui-handoff-skill -y
+
+Update an existing install:
+
+    npx skills update ui-handoff
+
+Update all installed skills:
+
+    npx skills update
+
+Pin a specific release when tags are available:
+
+    npx skills add zsw12abc/ui-handoff-skill@v0.1.0 -y
+
+Check the installed skill version by reading the version field in this file's frontmatter.
 
 ## Core Rule
 
@@ -152,4 +173,3 @@ Before handing off to implementation, verify:
 - Mobile behavior is specified.
 - Acceptance criteria include screenshot checks and overflow/overlap checks.
 - Assumptions are separated from facts visible in the image.
-
