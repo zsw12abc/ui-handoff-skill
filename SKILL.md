@@ -28,6 +28,13 @@ Pin a specific release when tags are available:
 
 Check the installed skill version by reading the version field in this file's frontmatter.
 
+Release a new version:
+
+    git tag v0.1.0
+    git push origin v0.1.0
+
+The release workflow validates the skill, checks that the tag matches the frontmatter version, and publishes zip/tar.gz artifacts.
+
 ## Core Rule
 
 Do not jump from screenshot to code. First produce a handoff package:
