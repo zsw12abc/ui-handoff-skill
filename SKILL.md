@@ -49,6 +49,7 @@ Do not jump from screenshot to code. First produce a handoff package:
 8. Asset decomposition when visual assets need extraction
 
 Use the schema in [references/schema.md](references/schema.md). For a complete example, load [references/example-handoff.md](references/example-handoff.md).
+For the required image-understanding workflow, read [references/design-image-analysis.md](references/design-image-analysis.md).
 
 For game UI, sprite sheets, icon packs, prop packs, maps, or other raster asset decomposition, also read [references/asset-tools.md](references/asset-tools.md). Use Agent Sprite Forge as an optional downstream asset pipeline, not as a required dependency for ordinary product UI handoff.
 
@@ -65,6 +66,8 @@ Identify the product type before extracting UI:
 - game_or_tool: interactive tools, games, simulations
 
 This controls density, motion, layout, and freedom. Product apps should be quiet, scannable, and efficient; brand pages may be more expressive.
+
+Before extracting components, complete the Design Image Analysis Protocol in [references/design-image-analysis.md](references/design-image-analysis.md). Record evidence and assumptions separately.
 
 ### 2. Extract Layout Regions
 
