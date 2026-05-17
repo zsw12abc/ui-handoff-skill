@@ -17,6 +17,33 @@ Required object. Example:
       "must_not_do": ["marketing hero", "decorative gradient blobs"]
     }
 
+### analysis
+
+Recommended object for serious screenshot handoff. It records how the design image was interpreted.
+
+    {
+      "analysis_passes": [
+        "whole_image",
+        "region_segmentation",
+        "text_hierarchy",
+        "component_boundaries",
+        "design_tokens",
+        "interaction_inference",
+        "freedom_map",
+        "qa"
+      ],
+      "evidence": [
+        {
+          "claim": "The left rail is primary navigation",
+          "basis": "visible repeated nav rows with selected state",
+          "confidence": "high",
+          "type": "visible"
+        }
+      ],
+      "assumptions": [],
+      "unknowns": []
+    }
+
 ### layout_regions
 
 Required array. Each item:
