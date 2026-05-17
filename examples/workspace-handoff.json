@@ -7,6 +7,32 @@
     "mood": "calm, focused, operational",
     "must_not_do": ["marketing hero", "decorative gradient blobs", "nested cards"]
   },
+  "analysis": {
+    "analysis_passes": [
+      "whole_image",
+      "region_segmentation",
+      "text_hierarchy",
+      "component_boundaries",
+      "design_tokens",
+      "interaction_inference",
+      "freedom_map",
+      "qa"
+    ],
+    "evidence": [
+      {
+        "claim": "The surface is a product workspace rather than a marketing page",
+        "basis": "visible app shell, navigation, cards, and operational panels",
+        "confidence": "high",
+        "type": "inferred"
+      }
+    ],
+    "assumptions": [
+      "Right-side details should collapse into a drawer on small screens."
+    ],
+    "unknowns": [
+      "Exact font family is not knowable from the screenshot alone."
+    ]
+  },
   "layout_regions": [
     {
       "id": "app_shell",
