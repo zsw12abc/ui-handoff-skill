@@ -9,6 +9,25 @@
 - Mood:
 - Must not do:
 
+## 1.5. Design Image Analysis
+
+| Pass | Key Findings | Confidence | Assumptions/Unknowns |
+|---|---|---|---|
+| whole_image |  |  |  |
+| region_segmentation |  |  |  |
+| text_hierarchy |  |  |  |
+| component_boundaries |  |  |  |
+| design_tokens |  |  |  |
+| interaction_inference |  |  |  |
+| freedom_map |  |  |  |
+| qa |  |  |  |
+
+### Evidence
+
+| Claim | Basis | Type | Confidence |
+|---|---|---|---|
+|  |  | visible/inferred/assumed/unknown |  |
+
 ## 2. Layout Regions
 
 | ID | Role | Position | Priority | Scroll | Responsive | Freedom |
