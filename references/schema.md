@@ -122,6 +122,28 @@ Required array.
       "required": true
     }
 
+### accessibility
+
+Recommended object. See [accessibility.md](accessibility.md) for the full checklist.
+
+    {
+      "target_level": "WCAG 2.1 AA",
+      "color_contrast": [
+        {"pair": "text_primary on background", "ratio": "12.6:1", "passes": "AA"}
+      ],
+      "focus_order": ["sidebar", "top_bar", "main_workspace"],
+      "focus_visible_required": true,
+      "touch_targets": {"minimum": "44x44px", "exceptions": []},
+      "keyboard_paths": [
+        {"action": "select card", "keys": "Tab, Enter"}
+      ],
+      "aria_roles": [
+        {"component": "WorkspaceCard", "role": "button", "notes": "aria-label from title"}
+      ],
+      "motion": {"respects_prefers_reduced_motion": true, "max_animation_duration_ms": 250},
+      "assumptions": []
+    }
+
 ### asset_decomposition
 
 Optional array. Include only when the design reference contains reusable raster assets, game sprites, maps, prop packs, icon sheets, FX, or HUD art that should be extracted or regenerated outside the normal UI component pipeline.

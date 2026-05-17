@@ -147,6 +147,30 @@
       "forbidden": ["change component structure"]
     }
   ],
+  "accessibility": {
+    "target_level": "WCAG 2.1 AA",
+    "color_contrast": [
+      {"pair": "text_primary on background", "ratio": "12.6:1", "passes": "AA"},
+      {"pair": "text_secondary on background", "ratio": "4.7:1", "passes": "AA"},
+      {"pair": "accent on background", "ratio": "5.1:1", "passes": "AA-large"}
+    ],
+    "focus_order": ["sidebar", "top_bar", "main_workspace", "right_panel"],
+    "focus_visible_required": true,
+    "touch_targets": {
+      "minimum": "44x44px",
+      "exceptions": ["dense data-table rows allowed at 32px with keyboard equivalent"]
+    },
+    "keyboard_paths": [
+      {"action": "select workspace card", "keys": "Tab to focus, Enter to open"},
+      {"action": "dismiss drawer", "keys": "Esc"}
+    ],
+    "aria_roles": [
+      {"component": "SidebarNavItem", "role": "link", "notes": "aria-current=page on selected"},
+      {"component": "WorkspaceCard", "role": "button", "notes": "aria-label from title"}
+    ],
+    "motion": {"respects_prefers_reduced_motion": true, "max_animation_duration_ms": 250},
+    "assumptions": ["Contrast ratios estimated from screenshot; re-verify against implemented tokens."]
+  },
   "acceptance_criteria": [
     {
       "id": "desktop-screenshot",
