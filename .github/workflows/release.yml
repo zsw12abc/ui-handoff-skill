@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, e.g. v0.1.0"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -11,6 +17,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,26 +44,27 @@ jobs:
                   break
           PY
           )"
-          TAG="${GITHUB_REF_NAME#v}"
+          TAG="${RELEASE_TAG#v}"
           if [ "$VERSION" != "$TAG" ]; then
-            echo "SKILL.md version $VERSION does not match tag $GITHUB_REF_NAME"
+            echo "SKILL.md version $VERSION does not match tag $RELEASE_TAG"
             exit 1
           fi
 
       - name: Build release archives
         run: |
           mkdir -p dist
-          git archive --format=zip --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$GITHUB_REF_NAME.zip" HEAD
-          git archive --format=tar.gz --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$GITHUB_REF_NAME.tar.gz" HEAD
+          git archive --format=zip --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$RELEASE_TAG.zip" HEAD
+          git archive --format=tar.gz --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$RELEASE_TAG.tar.gz" HEAD
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          name: UI Handoff Skill ${{ github.ref_name }}
+          name: UI Handoff Skill ${{ env.RELEASE_TAG }}
+          tag_name: ${{ env.RELEASE_TAG }}
           body: |
             ## Install
 
-                npx skills add zsw12abc/ui-handoff-skill@${{ github.ref_name }} -y
+                npx skills add zsw12abc/ui-handoff-skill@${{ env.RELEASE_TAG }} -y
 
             ## Update
 
@@ -65,5 +74,6 @@ jobs:
             - scripts/validate_skill.py
             - scripts/validate_handoff.py examples/workspace-handoff.json
           files: |
-            dist/ui-handoff-skill-${{ github.ref_name }}.zip
-            dist/ui-handoff-skill-${{ github.ref_name }}.tar.gz
+            dist/ui-handoff-skill-${{ env.RELEASE_TAG }}.zip
+            dist/ui-handoff-skill-${{ env.RELEASE_TAG }}.tar.gz
+
