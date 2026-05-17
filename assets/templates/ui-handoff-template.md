@@ -90,6 +90,33 @@
 | tablet |  | required |
 | mobile |  | required |
 
+## 6.5. Accessibility
+
+- Target level: WCAG 2.1 AA
+- Focus order: 
+- Touch target minimum: 44x44px
+- Motion respects `prefers-reduced-motion`: yes / no
+
+### Color Contrast
+
+| Pair | Ratio | Passes |
+|---|---|---|
+| text_primary on background |  |  |
+| text_secondary on surface |  |  |
+| accent on background |  |  |
+
+### Keyboard Paths
+
+| Action | Keys |
+|---|---|
+|  |  |
+
+### ARIA Roles
+
+| Component | Role | Notes |
+|---|---|---|
+|  |  |  |
+
 ## 7. AI Freedom Rules
 
 | Area | Freedom | Allowed | Forbidden |

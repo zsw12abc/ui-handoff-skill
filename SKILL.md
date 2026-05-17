@@ -1,183 +1,70 @@
 ---
 name: ui-handoff
 description: Turn UI screenshots, static mockups, Figma exports, or design references into implementation-ready UI handoff specs for AI coding agents. Use when the user provides a design image and needs components, layout regions, design tokens, interaction states, responsive rules, AI freedom constraints, and acceptance criteria before building frontend code.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # UI Handoff
 
-Convert static UI references into a structured spec that another AI agent can implement without guessing.
+Convert a static UI reference into a structured spec another AI agent can implement without inventing.
 
-## Install and Update
-
-Install the latest stable version:
-
-    npx skills add zsw12abc/ui-handoff-skill -y
-
-Update an existing install:
-
-    npx skills update ui-handoff
-
-Update all installed skills:
-
-    npx skills update
-
-Pin a specific release when tags are available:
-
-    npx skills add zsw12abc/ui-handoff-skill@v0.1.0 -y
-
-Check the installed skill version by reading the version field in this file's frontmatter.
-
-Release a new version:
-
-    git tag v0.1.0
-    git push origin v0.1.0
-
-The release workflow validates the skill, checks that the tag matches the frontmatter version, and publishes zip/tar.gz artifacts.
+For install, update, and release docs see [README.md](README.md).
 
 ## Core Rule
 
-Do not jump from screenshot to code. First produce a handoff package:
+Never jump from screenshot to code. First produce a handoff package covering:
 
-1. Visual inventory
-2. Component model
-3. Design tokens
-4. Interaction and state model
-5. Responsive behavior
-6. AI freedom rules
-7. Acceptance criteria
-8. Asset decomposition when visual assets need extraction
+1. Page intent and surface classification
+2. Layout regions
+3. Component inventory
+4. Design tokens
+5. Interaction states
+6. Responsive rules
+7. Accessibility checks
+8. AI freedom rules (exact / adaptive / creative / placeholder)
+9. Acceptance criteria
+10. Asset decomposition — only if raster/sprite/map assets are present
 
-Use the schema in [references/schema.md](references/schema.md). For a complete example, load [references/example-handoff.md](references/example-handoff.md).
-For the required image-understanding workflow, read [references/design-image-analysis.md](references/design-image-analysis.md).
+Separate **evidence** (visible in the image) from **assumptions** (needed for implementation but not visible). Never hide uncertainty.
 
-For game UI, sprite sheets, icon packs, prop packs, maps, or other raster asset decomposition, also read [references/asset-tools.md](references/asset-tools.md). Use Agent Sprite Forge as an optional downstream asset pipeline, not as a required dependency for ordinary product UI handoff.
+## Mode Selection
+
+- **Quick mode** — user wants a fast answer or a single small screen. Produce `ui-handoff.md` inline; skip the JSON file and validator. Still tag freedom rules and list assumptions.
+- **Full mode** — user will hand off to a coding agent, or the surface is non-trivial. Produce all four deliverables (see Output below) and run the validator.
+
+Default to Quick mode unless the user signals implementation will follow.
+
+## Inputs
+
+- Pasted/attached screenshot
+- Figma export, design image URL, or mockup file
+- Optional Figma MCP if connected — fetch frame metadata when available rather than re-inferring from pixels
 
 ## Workflow
 
-### 1. Classify the Surface
+1. **Classify the surface** — `product_app | commerce | content | brand | game_or_tool`. This controls density, motion, layout, and freedom. Product apps stay quiet, scannable, efficient; brand pages may be expressive.
+2. **Run the analysis protocol** in [references/design-image-analysis.md](references/design-image-analysis.md). Record evidence, assumptions, and unknowns separately.
+3. **Extract regions, components, tokens, states, responsive rules, a11y checks, freedom rules, and acceptance criteria** per the schema in [references/schema.md](references/schema.md). Use the accessibility checklist in [references/accessibility.md](references/accessibility.md) — color contrast, focus-visible, touch targets, keyboard nav, ARIA roles, motion safety.
+4. **Decompose visual assets** only when raster sprites, maps, icon packs, prop packs, or HUD art are present — see [references/asset-tools.md](references/asset-tools.md). Do not force the sprite pipeline for ordinary SaaS/dashboard/mobile UI.
+5. **Produce deliverables** (Full mode) and validate.
 
-Identify the product type before extracting UI:
+## Naming Rules
 
-- product_app: dashboards, workspaces, admin tools, editors, SaaS apps
-- commerce: product listings, checkout, catalog, booking
-- content: blogs, docs, editorial, portfolio
-- brand: landing pages, campaigns, marketing pages
-- game_or_tool: interactive tools, games, simulations
-
-This controls density, motion, layout, and freedom. Product apps should be quiet, scannable, and efficient; brand pages may be more expressive.
-
-Before extracting components, complete the Design Image Analysis Protocol in [references/design-image-analysis.md](references/design-image-analysis.md). Record evidence and assumptions separately.
-
-### 2. Extract Layout Regions
-
-Name each visible region by role, not position alone:
-
-- app_shell
-- sidebar
-- top_bar
-- main_workspace
-- right_panel
-- bottom_bar
-- modal
-- drawer
-- canvas
-- data_table
-- card_grid
-
-For each region, record purpose, approximate dimensions, content density, scroll behavior, and collapse behavior.
-
-### 3. Build Component Inventory
-
-For every repeated or interactive element, define:
-
-- component name
-- role/purpose
-- variants
-- states
-- props/data inputs
-- exact/adaptive/creative freedom level
-- implementation notes
-
-Prefer reusable components over one-off div recreation.
-
-### 4. Extract Design Tokens
-
-Capture tokens in semantic roles:
-
-- colors: background, surface, text, border, accent, status colors
-- typography: page title, section title, body, caption, numeric/stat text
-- spacing: base scale and common gaps
-- radius: button, card, modal, input
-- elevation: borders, shadows, overlays
-- iconography: icon style, size, stroke, label rules
-- motion: durations, easing, hover/selection feedback
-
-If exact values are unavailable, estimate conservatively and mark confidence as estimated.
-
-### 4.5. Decompose Visual Assets When Needed
-
-Use this only when the design reference contains game-ready assets, sprite sheets, maps, icon packs, prop packs, HUD art, or reusable raster elements.
-
-Record:
-
-- source asset regions
-- asset type: icon, sprite, prop, map, HUD element, FX, texture
-- extraction strategy: manual crop, sprite-sheet split, prop-pack slicing, regenerate, or leave embedded
-- recommended downstream tool
-- output expectations: transparent PNG, frame sequence, GIF preview, metadata, collision/zones, engine handoff
-
-If Agent Sprite Forge is available, use:
-
-- generate2dsprite for sprites, animation sheets, props, spell bundles, FX, and frame extraction
-- generate2dmap for layered raster maps, prop packs, collision/zones, and Godot-style map handoff
-
-Do not force this pipeline for normal SaaS/dashboard/mobile UI screenshots.
-
-### 5. Define Interaction States
-
-Static screenshots rarely show all states. Add the missing states explicitly:
-
-- hover
-- active/pressed
-- selected
-- focus-visible
-- disabled
-- loading
-- empty
-- error
-- success
-- unsaved changes
-
-Do not invent major product behavior. Mark unclear behavior as an assumption.
-
-### 6. Set AI Freedom Rules
-
-Classify every area:
-
-- exact: must match structure, scale, density, and style
-- adaptive: may change for content/responsive needs while preserving design language
-- creative: may be redesigned within the extracted design language
-- placeholder: sample content only
-
-Also list anti-patterns the implementation must avoid.
-
-### 7. Produce Deliverables
-
-Generate these sections:
-
-1. ui-handoff.md: human-readable handoff
-2. ui-handoff.json: machine-checkable schema
-3. implementation-prompt.md: prompt for a coding agent
-4. acceptance-checklist.md: verification gate
-
-If the user only wants a quick answer, provide ui-handoff.md inline and skip files unless coding will follow.
+- Components named by **role**, not visual appearance (`WorkspaceCard`, not `WhiteBox`).
+- Layout regions named by **role**, not position alone (`inspector_panel`, not `right_thing`).
+- Design tokens in **semantic roles** (`text_secondary`, `surface`, `accent`), not raw colors.
+- Every interactive component must list its states; missing states (hover, focus-visible, disabled, loading, empty, error) are added explicitly even if not in the image.
 
 ## Output Contract
 
-When creating files, use the template at [assets/templates/ui-handoff-template.md](assets/templates/ui-handoff-template.md).
+Full mode generates:
 
-Minimum JSON fields:
+1. `ui-handoff.md` — human-readable, using [assets/templates/ui-handoff-template.md](assets/templates/ui-handoff-template.md)
+2. `ui-handoff.json` — machine-checkable, matches [references/schema.md](references/schema.md)
+3. `implementation-prompt.md` — prompt for the coding agent
+4. `acceptance-checklist.md` — verification gate
+
+Required JSON fields (enforced by the validator):
 
     {
       "page_intent": {},
@@ -190,18 +77,29 @@ Minimum JSON fields:
       "acceptance_criteria": []
     }
 
-Validate JSON with:
+Recommended additional fields: `analysis`, `accessibility`, `asset_decomposition` — see [references/schema.md](references/schema.md).
 
-    python3 scripts/validate_handoff.py path/to/ui-handoff.json
+Validate:
+
+    python scripts/validate_handoff.py path/to/ui-handoff.json
+
+The validator checks required fields, freedom enums on regions/components/rules, and that every `interaction_states.component` references a name in `component_inventory`.
 
 ## Quality Gate
 
 Before handing off to implementation, verify:
 
-- Components are named by role, not only visual appearance.
+- Components named by role, not appearance.
 - All interactive components include states.
 - Design tokens use semantic roles.
-- Exact/adaptive/creative areas are explicit.
+- Exact / adaptive / creative areas are explicit.
 - Mobile behavior is specified.
-- Acceptance criteria include screenshot checks and overflow/overlap checks.
+- Accessibility checks completed (contrast, focus order, touch targets).
+- Acceptance criteria include screenshot and overflow/overlap checks.
 - Assumptions are separated from facts visible in the image.
+
+## Related Skills
+
+- `design:accessibility-review` — deeper WCAG 2.1 AA audit; pair with this skill before final handoff.
+- `design:design-critique` — feedback on hierarchy and consistency before locking the spec.
+- `design:design-handoff` — generic dev-facing handoff; use that when the consumer is a human, not an AI coding agent.

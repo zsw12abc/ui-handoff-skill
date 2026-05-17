@@ -10,16 +10,16 @@ def fail(message: str) -> int:
 
 
 def main() -> int:
-    path = Path("SKILL.md")
-    if not path.exists():
+    skill_path = Path("SKILL.md")
+    if not skill_path.exists():
         return fail("SKILL.md not found")
 
-    text = path.read_text(encoding="utf-8")
+    text = skill_path.read_text(encoding="utf-8")
     if not text.startswith("---\n"):
         return fail("SKILL.md must start with YAML frontmatter")
 
     try:
-        _, frontmatter, body = text.split("---", 2)
+        _, frontmatter, _ = text.split("---", 2)
     except ValueError:
         return fail("SKILL.md frontmatter is not closed")
 
@@ -39,19 +39,24 @@ def main() -> int:
     if not re.fullmatch(r"\d+\.\d+\.\d+", fields["version"]):
         return fail("version must use semver format, e.g. 0.1.0")
 
+    readme_path = Path("README.md")
+    if not readme_path.exists():
+        return fail("README.md not found (install/update docs live here)")
+
+    readme = readme_path.read_text(encoding="utf-8")
+    version = fields["version"]
     required_phrases = [
         "npx skills add zsw12abc/ui-handoff-skill -y",
         "npx skills update ui-handoff",
-        "npx skills add zsw12abc/ui-handoff-skill@v0.1.0 -y",
+        f"npx skills add zsw12abc/ui-handoff-skill@v{version} -y",
     ]
     for phrase in required_phrases:
-        if phrase not in body:
-            return fail(f"missing install/update instruction: {phrase}")
+        if phrase not in readme:
+            return fail(f"README.md missing install/update instruction: {phrase}")
 
-    print(f"PASS: SKILL.md metadata valid (version {fields['version']})")
+    print(f"PASS: SKILL.md metadata valid (version {fields['version']}); README.md has install docs")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
