@@ -1,0 +1,4 @@
+display_name: UI Handoff
+short_description: Convert UI screenshots into component, token, interaction, and implementation specs.
+default_prompt: Turn this UI reference into an implementation-ready handoff spec with components, design tokens, states, responsive rules, AI freedom rules, and acceptance criteria.
+
