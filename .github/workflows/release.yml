@@ -1,0 +1,69 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate skill metadata
+        run: python3 scripts/validate_skill.py
+
+      - name: Validate example handoff
+        run: python3 scripts/validate_handoff.py examples/workspace-handoff.json
+
+      - name: Check tag matches SKILL.md version
+        run: |
+          VERSION="$(python3 - <<'PY'
+          from pathlib import Path
+          text = Path("SKILL.md").read_text(encoding="utf-8")
+          frontmatter = text.split("---", 2)[1]
+          for line in frontmatter.splitlines():
+              if line.startswith("version:"):
+                  print(line.split(":", 1)[1].strip())
+                  break
+          PY
+          )"
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "SKILL.md version $VERSION does not match tag $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+      - name: Build release archives
+        run: |
+          mkdir -p dist
+          git archive --format=zip --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$GITHUB_REF_NAME.zip" HEAD
+          git archive --format=tar.gz --prefix=ui-handoff-skill/ -o "dist/ui-handoff-skill-$GITHUB_REF_NAME.tar.gz" HEAD
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: UI Handoff Skill ${{ github.ref_name }}
+          body: |
+            ## Install
+
+                npx skills add zsw12abc/ui-handoff-skill@${{ github.ref_name }} -y
+
+            ## Update
+
+                npx skills update ui-handoff
+
+            This release was validated with:
+            - scripts/validate_skill.py
+            - scripts/validate_handoff.py examples/workspace-handoff.json
+          files: |
+            dist/ui-handoff-skill-${{ github.ref_name }}.zip
+            dist/ui-handoff-skill-${{ github.ref_name }}.tar.gz
