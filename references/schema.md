@@ -95,6 +95,20 @@ Required array.
       "required": true
     }
 
+### asset_decomposition
+
+Optional array. Include only when the design reference contains reusable raster assets, game sprites, maps, prop packs, icon sheets, FX, or HUD art that should be extracted or regenerated outside the normal UI component pipeline.
+
+    {
+      "id": "player_sprite_sheet",
+      "source_region": "lower-left animation strip",
+      "asset_type": "sprite_sheet",
+      "strategy": "sprite-sheet split and transparent cleanup",
+      "recommended_tool": "agent-sprite-forge/generate2dsprite",
+      "outputs": ["transparent PNG frames", "GIF preview", "metadata JSON"],
+      "notes": "Preserve frame count and animation cadence."
+    }
+
 ## Freedom Levels
 
 - exact: preserve visual structure, relative spacing, density, and component style.
@@ -105,4 +119,3 @@ Required array.
 ## Confidence
 
 Use observed when directly visible in the image. Use estimated when inferred from pixels. Use assumed when needed for implementation but not visible.
-
