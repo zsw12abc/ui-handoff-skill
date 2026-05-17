@@ -1,0 +1,139 @@
+{
+  "page_intent": {
+    "surface_type": "product_app",
+    "user_goal": "Review and manage work items from a central workspace",
+    "design_register": "product",
+    "density": "compact",
+    "mood": "calm, focused, operational",
+    "must_not_do": ["marketing hero", "decorative gradient blobs", "nested cards"]
+  },
+  "layout_regions": [
+    {
+      "id": "app_shell",
+      "role": "contains navigation and workspace",
+      "position": "full page",
+      "visual_priority": 1,
+      "approx_size": "100vw x 100vh",
+      "scroll_behavior": "body locked; internal regions scroll",
+      "responsive_behavior": "preserve shell; collapse side panels on narrow screens",
+      "freedom": "exact"
+    },
+    {
+      "id": "main_workspace",
+      "role": "primary content and task surface",
+      "position": "center",
+      "visual_priority": 1,
+      "approx_size": "fills remaining width",
+      "scroll_behavior": "vertical content scroll",
+      "responsive_behavior": "full width below 900px",
+      "freedom": "adaptive"
+    }
+  ],
+  "component_inventory": [
+    {
+      "name": "SidebarNavItem",
+      "role": "switch workspace sections",
+      "instances_visible": 8,
+      "variants": ["default", "selected", "disabled"],
+      "states": ["hover", "selected", "focus-visible"],
+      "props": ["icon", "label", "count"],
+      "freedom": "exact",
+      "notes": "Stable height; no layout shift between states."
+    },
+    {
+      "name": "WorkspaceCard",
+      "role": "summarize a work item",
+      "instances_visible": 6,
+      "variants": ["default", "selected", "warning"],
+      "states": ["hover", "selected", "loading", "empty"],
+      "props": ["title", "status", "metadata", "actions"],
+      "freedom": "exact",
+      "notes": "Use the same padding and radius across all cards."
+    }
+  ],
+  "design_tokens": {
+    "colors": {
+      "background": {"value": "#f6f7f4", "confidence": "estimated"},
+      "surface": {"value": "#ffffff", "confidence": "estimated"},
+      "border": {"value": "#dfe4dc", "confidence": "estimated"},
+      "text_primary": {"value": "#1d241f", "confidence": "estimated"},
+      "text_secondary": {"value": "#667067", "confidence": "estimated"},
+      "accent": {"value": "#376b5d", "confidence": "estimated"}
+    },
+    "typography": {
+      "page_title": {"size": "22px", "weight": 600},
+      "section_title": {"size": "15px", "weight": 600},
+      "body": {"size": "14px", "weight": 400},
+      "caption": {"size": "12px", "weight": 400}
+    },
+    "spacing": {
+      "base_unit": "4px",
+      "scale": ["4px", "8px", "12px", "16px", "24px", "32px"]
+    },
+    "radius": {
+      "button": "6px",
+      "card": "8px",
+      "panel": "8px"
+    },
+    "elevation": {
+      "card": "1px border with minimal shadow"
+    }
+  },
+  "interaction_states": [
+    {
+      "component": "SidebarNavItem",
+      "state": "selected",
+      "visual_change": "active background and stronger text/icon color",
+      "behavior": "switch workspace view",
+      "required": true
+    },
+    {
+      "component": "WorkspaceCard",
+      "state": "hover",
+      "visual_change": "subtle border or shadow emphasis without movement",
+      "behavior": "indicate click target",
+      "required": true
+    }
+  ],
+  "responsive_rules": [
+    {
+      "breakpoint": "below 900px",
+      "rule": "right panel becomes drawer; main workspace fills width",
+      "priority": "required"
+    },
+    {
+      "breakpoint": "below 640px",
+      "rule": "sidebar collapses to top or bottom navigation; content cards stack",
+      "priority": "required"
+    }
+  ],
+  "ai_freedom_rules": [
+    {
+      "area": "app shell proportions",
+      "freedom": "exact",
+      "allowed": ["minor pixel adjustments for responsive fit"],
+      "forbidden": ["marketing hero", "decorative background", "nested card layout"]
+    },
+    {
+      "area": "sample card data",
+      "freedom": "placeholder",
+      "allowed": ["replace labels and metadata"],
+      "forbidden": ["change component structure"]
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "desktop-screenshot",
+      "criterion": "Desktop screenshot matches shell proportions, density, and hierarchy",
+      "verification": "Playwright screenshot at 1440x900",
+      "required": true
+    },
+    {
+      "id": "mobile-overflow",
+      "criterion": "Mobile viewport has no text overflow or component overlap",
+      "verification": "Playwright screenshot at 390x844",
+      "required": true
+    }
+  ]
+}
+
