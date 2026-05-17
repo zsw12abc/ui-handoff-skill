@@ -134,6 +134,6 @@
       "verification": "Playwright screenshot at 390x844",
       "required": true
     }
-  ]
+  ],
+  "asset_decomposition": []
 }
-
