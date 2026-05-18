@@ -1,7 +1,7 @@
 ---
 name: ui-handoff
 description: Turn UI screenshots, static mockups, Figma exports, or design references into implementation-ready UI handoff specs for AI coding agents. Use when the user provides a design image and needs components, layout regions, design tokens, interaction states, responsive rules, AI freedom constraints, and acceptance criteria before building frontend code.
-version: 0.1.1
+version: 0.2.0
 ---
 
 # UI Handoff
@@ -97,6 +97,46 @@ Before handing off to implementation, verify:
 - Accessibility checks completed (contrast, focus order, touch targets).
 - Acceptance criteria include screenshot and overflow/overlap checks.
 - Assumptions are separated from facts visible in the image.
+
+## Feedback Capture (self-improvement)
+
+This skill keeps a feedback log so future invocations can be optimized against real gaps, not guesses. **Log on the spot** — silent failures don't get fixed.
+
+**When to log** — call `scripts/log_feedback.py` whenever the user:
+
+- Corrects the handoff ("you missed X", "this should be Y", "wrong freedom level for Z").
+- Points out something the skill doesn't cover (a missing field, an unhandled surface type, a validator false-positive/negative).
+- Has to manually rewrite a section of the generated spec.
+- Explicitly says "remember this" / "记下来" / "feedback for the skill".
+
+Also log a confirmation entry (severity `low`, tag `validated`) when the user explicitly approves a non-obvious choice — `"--message='quick mode was the right call for this single-screen ask'"`. Successes are signal too; only logging corrections drifts the skill toward over-caution.
+
+**Do not log** routine in-conversation tweaks where the user is just iterating on the artifact (e.g. "rename this token") — those are about the current spec, not about the skill.
+
+**Call format** — use the project's Python:
+
+    python scripts/log_feedback.py \
+      --message "validator didn't catch a component referenced by an interaction state with a typo" \
+      --severity high \
+      --tags "validator,naming" \
+      --context "settings page handoff in product_app surface" \
+      --skill-version 0.2.0
+
+Severity: `high` = blocks the handoff or misleads the implementing agent; `med` = noticeable friction; `low` = polish or confirmation. Tags are free-form but reuse existing ones when possible (`validator`, `a11y`, `tokens`, `freedom-rules`, `responsive`, `naming`, `assets`, `mode-selection`, `validated`).
+
+The script writes to `~/.claude/skill-feedback/ui-handoff/feedback.jsonl` (user-level, so feedback from any project surfaces here when you come back to optimize).
+
+## Optimization Mode
+
+Triggered when, inside the skill's own repo, the user asks to **optimize / improve / review feedback for / iterate on** the skill (in English or Chinese — e.g. "优化这个 skill", "review feedback").
+
+Steps:
+
+1. Read the log: `python scripts/show_feedback.py` (add `--since 30d` once the log is large).
+2. Cluster entries by tag and severity. Surface every `high`-severity item and any tag with 3+ entries; ignore singleton `low` items unless they form a pattern.
+3. For each cluster, propose a specific edit (which file, which section, what to add/remove). Do not invent improvements that aren't backed by a logged entry — the point is to ground optimization in real usage.
+4. Confirm the plan with the user before editing. After applying, bump the `version:` field in this file's frontmatter (patch for fixes, minor for new sections or new validator rules).
+5. Do **not** delete log entries after acting on them — they're history. If you want to mark items addressed, add a sibling file `~/.claude/skill-feedback/ui-handoff/addressed.jsonl` with the original `ts` and the commit SHA that addressed it.
 
 ## Related Skills
 

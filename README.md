@@ -21,7 +21,7 @@ Latest stable:
 
 Pin a specific release:
 
-    npx skills add zsw12abc/ui-handoff-skill@v0.1.1 -y
+    npx skills add zsw12abc/ui-handoff-skill@v0.2.0 -y
 
 Update one skill:
 
@@ -44,6 +44,20 @@ The skill triggers automatically when a design image is present and the request 
 Run the validator on a generated spec:
 
     python scripts/validate_handoff.py path/to/ui-handoff.json
+
+## Self-improvement loop
+
+The skill records user feedback while it runs so it can be optimized later against real gaps. Logs land at `~/.claude/skill-feedback/ui-handoff/feedback.jsonl` (one JSON object per line) and are written by:
+
+    python scripts/log_feedback.py -m "what was wrong" -s med -t "validator,a11y" -c "context"
+
+To review what's accumulated:
+
+    python scripts/show_feedback.py           # grouped by tag, high-severity first
+    python scripts/show_feedback.py --since 30d --tag validator
+    python scripts/show_feedback.py --format json
+
+In this repo, ask the skill to **"review feedback"** or **"optimize this skill"** — it reads the log, clusters by tag/severity, and proposes specific edits backed by logged entries.
 
 ## Repository layout
 
